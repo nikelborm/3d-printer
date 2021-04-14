@@ -1,0 +1,65 @@
+{
+  "name": "3d-printer-web",
+  "version": "2.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.6.0",
+    "chart.js": "^2.9.4",
+    "dayjs": "^1.10.4",
+    "express": "^4.17.1",
+    "express-favicon": "^2.0.1",
+    "react": "^17.0.2",
+    "react-bootstrap": "^1.5.2",
+    "react-chartjs-2": "^2.11.1",
+    "react-dom": "^17.0.2",
+    "react-dropzone": "^11.3.2",
+    "react-router-bootstrap": "^0.25.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "react-sweet-progress": "^1.1.2",
+    "sha256": "^0.2.0",
+    "styled-components": "^5.2.1",
+    "ws": "^7.4.4"
+  },
+  "scripts": {
+    "start": "node --trace-deprecation --trace-warnings index.js",
+    "startdev": "react-scripts start",
+    "build": "react-scripts build",
+    "buildp": "react-scripts build --profile",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=15.0.1"
+  },
+  "homepage": ".",
+  "proxy": "http://localhost:3000/",
+  "optionalDependencies": {
+    "jshint": "^2.12.0",
+    "source-map-explorer": "^2.4.2"
+  },
+  "resolutions": {
+    "styled-components": "^5"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.12.0",
+    "react-vt": "^0.1.1"
+  }
+}
