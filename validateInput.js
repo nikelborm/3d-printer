@@ -1,10 +1,10 @@
-const { log } = require( "./log" );
+import { log } from "./log.js";
 
 function isCorrect( field ) {
     return typeof field === "string" && !!field.length;
 }
 
-function validateInput( input ) {
+export function validateInput( input ) {
     let isOK = false;
     let body;
     let info = "";
@@ -28,5 +28,3 @@ function validateInput( input ) {
     }
     return { isOK, info, body };
 }
-
-exports.validateInput = validateInput;

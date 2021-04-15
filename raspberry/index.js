@@ -63,7 +63,7 @@ async function messageParser( data ) {
                 console.log( "umountout: ", umountout );
                 serialPort.write( "M21\nM23 " + dos8dot3filename + "\nM24\n" );
             } catch ( error ) {
-                console.log( 'error: ', error );
+                console.log( "error: ", error );
                 wsConnectionToServer.send( {
                     event: "errorOnFileUpload",
                     errorMessage: error.message,
@@ -84,7 +84,7 @@ async function messageParser( data ) {
                     time: Date.now()
                 } );
             } catch ( error ) {
-                console.log('error: ', error);
+                console.log("error: ", error);
             }
             break;
         }
