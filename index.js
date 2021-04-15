@@ -1,14 +1,19 @@
-// const repl = require( "repl" );
-const express      = require( "express" );
-const favicon      = require( "express-favicon" );
-const path         = require( "path" );
-const http         = require( "http" );
-const sha256       = require( "sha256" );
-const WebSocket    = require( "ws" ); // jshint ignore:line
-const { shutdown }      = require( "./shutdown" );
-const { log }           = require( "./log" );
-// const { validateInput } = require( "./validateInput" );
+// import repl from "repl";
+import express from "express";
+import favicon from "express-favicon";
+import path from "path";
+import http from "http";
+import sha256 from "sha256";
+import ws from "ws";
+import { shutdown } from "./shutdown.js";
+import { log } from "./log.js";
+// import { validateInput } from "./validateInput";
 
+const __dirname = path.resolve();
+
+const staticBuildDir = express.static( path.join( __dirname, "build" ) );
+
+const secsToHeatExtruder  = process.env.SECS_TO_HEAT_EXTRUDER || 300;
 const serverPort          = process.env.PORT                  || 3000;
 const userPasswordHash    = process.env.USER_PASSWORD_HASH    || "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824";
 const printerPasswordHash = process.env.PRINTER_PASSWORD_HASH || "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824";
@@ -16,38 +21,42 @@ const printerPasswordHash = process.env.PRINTER_PASSWORD_HASH || "2cf24dba5fb0a3
 console.log( "serverPort: ", serverPort );
 console.log( "userPasswordHash: ", userPasswordHash );
 console.log( "printerPasswordHash: ", printerPasswordHash );
+console.log( "secsToHeatExtruder: ", secsToHeatExtruder );
+console.log( "__dirname: ", __dirname );
 
 // const history = [];
 let filePrintingInfo = {
-    isPrintingActive: false
+    isPrintingActive: false,
 };
-const secondsForHeatingExtruder = 300;
+
 let isPrinterConnected = false;
 let printingStatusNotificationTimeout;
 
-const staticBuildDir = express.static( path.join( __dirname, "build" ) );
 const app = express();
+
 app.use( favicon( path.join( __dirname, "build", "favicon.ico" ) ) );
+
 app.use( "/", staticBuildDir );
 app.use( "/login/", staticBuildDir );
 app.use( "/admin/terminal/", staticBuildDir );
 app.use( "/admin/axesControl/", staticBuildDir );
 app.use( "/admin/heatObserver/", staticBuildDir );
 app.use( "/admin/loadSlicedModel/", staticBuildDir );
+
 app.get( "*", ( request, response ) => {
     response.redirect( "/" );
 } );
 
 const httpServer = http.createServer( app );
-const webSocketServer = new WebSocket.Server( { server: httpServer } );
+const webSocketServer = new ws.Server( { server: httpServer } );
 // @ts-ignore
 httpServer.listen( serverPort, function() {
     log( "http and websocket server is listening" );
 } );
 
 function broadcast( body, filter = c => true ) {
-    webSocketServer.clients.forEach( client =>
-        filter( client ) && client.send( JSON.stringify( body ) )
+    webSocketServer.clients.forEach(
+        client => filter( client ) && client.send( JSON.stringify( body ) )
     );
 }
 const sendToAuthorized = body => broadcast( body, client => client.isUser || client.isPrinter );
@@ -61,7 +70,7 @@ function allMessagesHandler( data, connection ) {
             sendToAuthorized( {
                 event: "clientSendedGCommand",
                 command: data.command,
-                time: Date.now()
+                time: Date.now(),
             } );
             break;
         }
@@ -70,35 +79,35 @@ function allMessagesHandler( data, connection ) {
             sendToUsers( {
                 event: "clientSendedGCodeFile",
                 preview: data.preview,
-                time: Date.now()
+                time: Date.now(),
             } );
             // @ts-ignore
             filePrintingInfo = {
                 isPrintingActive: true,
-                secondsCost: data.secondsCost + secondsForHeatingExtruder,
+                secondsCost: data.secondsCost + secsToHeatExtruder,
                 gCodeFileName: data.gCodeFileName,
                 startTime: Date.now(),
-                finishTime: Date.now() + ( data.secondsCost + secondsForHeatingExtruder ) * 1000,
+                finishTime: Date.now() + ( data.secondsCost + secsToHeatExtruder ) * 1000,
             };
             sendToUsers( {
                 event: "modelPrintingStatus",
-                ...filePrintingInfo
+                ...filePrintingInfo,
             } );
             clearTimeout( printingStatusNotificationTimeout );
 
             printingStatusNotificationTimeout = setTimeout( () => {
                 filePrintingInfo = {
-                    isPrintingActive: false
+                    isPrintingActive: false,
                 };
                 sendToUsers( {
                     event: "modelPrintingStatus",
-                    ...filePrintingInfo
+                    ...filePrintingInfo,
                 } );
             }, filePrintingInfo.secondsCost * 1000 + 300000 );
             sendToPrinters( {
                 event: "clientSendedGCodeFile",
                 gCodeFileContent: data.gCodeFileContent,
-                gCodeFileName: data.gCodeFileName
+                gCodeFileName: data.gCodeFileName,
             } );
             break;
         }
@@ -108,7 +117,7 @@ function allMessagesHandler( data, connection ) {
                 event: "printerSendedLine",
                 line: data.line,
                 time: Date.now(),
-                id: "" + Date.now() + process.hrtime()[ 1 ]
+                id: "" + Date.now() + process.hrtime()[ 1 ],
             } );
             break;
         }
@@ -119,34 +128,40 @@ function allMessagesHandler( data, connection ) {
                 sendToUsers( {
                     event: "printerState",
                     isPrinterConnected,
-                    time: Date.now()
+                    time: Date.now(),
                 } );
             }
             break;
         }
         case "userauth": {
             const isPasswordCorrect = sha256( data.password ) === userPasswordHash;
-            connection.send( JSON.stringify( {
-                event: "loginReply",
-                report: {
-                    isError: !isPasswordCorrect,
-                    info: isPasswordCorrect ? "" : "Неверный пароль",
-                },
-                reply: {
-                    password: data.password,
-                },
-            } ) );
+            connection.send(
+                JSON.stringify( {
+                    event: "loginReply",
+                    report: {
+                        isError: !isPasswordCorrect,
+                        info: isPasswordCorrect ? "" : "Неверный пароль",
+                    },
+                    reply: {
+                        password: data.password,
+                    },
+                } )
+            );
             if( !isPasswordCorrect ) return;
             connection.isUser = true;
-            connection.send( JSON.stringify( {
-                event: "modelPrintingStatus",
-                ...filePrintingInfo
-            } ) );
-            connection.send( JSON.stringify( {
-                event: "printerState",
-                isPrinterConnected,
-                time: Date.now()
-            } ) );
+            connection.send(
+                JSON.stringify( {
+                    event: "modelPrintingStatus",
+                    ...filePrintingInfo,
+                } )
+            );
+            connection.send(
+                JSON.stringify( {
+                    event: "printerState",
+                    isPrinterConnected,
+                    time: Date.now(),
+                } )
+            );
             break;
         }
         default:
@@ -165,7 +180,7 @@ webSocketServer.on( "connection", ( connection, request ) => {
         sendToUsers( {
             event: "printerState",
             isPrinterConnected,
-            time: Date.now()
+            time: Date.now(),
         } );
     } );
     connection.addListener( "message", async function ( input ) {

@@ -1,6 +1,6 @@
-const { log } = require( "./log" );
+import { log } from "./log.js";
 
-const shutdown = ( cleaner, webSocketServer, httpsServer ) => () => {
+export const shutdown = ( cleaner, webSocketServer, httpsServer ) => () => {
     let haveErrors = false;
     console.log( "Exiting...\n\nClearing interval with cleaner of websocket connections..." );
     clearInterval( cleaner );
@@ -20,6 +20,4 @@ const shutdown = ( cleaner, webSocketServer, httpsServer ) => () => {
         console.log( "Http Server is not listening.\n\nWebSocket Server is not listening.\n\n" );
         process.exit( 1 );
     }
-}
-
-exports.shutdown = shutdown;
+};
