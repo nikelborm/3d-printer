@@ -1,12 +1,14 @@
-import React, { useContext, useCallback } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { useContext, useCallback } from "react";
+import { Redirect } from "react-router-dom";
 import { GlobalContext } from "../../components/GlobalContextBasedOnDataFromWS";
 import { RecordsVisualization } from "./components/RecordsVisualization";
 import { PageContent } from "../../components/PageContent";
 import { GettingTemperatureDataControlButtons } from "./components/GettingTemperatureDataControlButtons";
 import { WarningMessage } from "./components/WarningMessage";
+import { MenuWithRouter } from "../../components/Menu";
+import { FilePrintingStatusBar } from "../../components/FilePrintingStatusBar";
 
-const HeatObserver = () => {
+export const HeatObserver = () => {
     const {
         authorizationActions: {
             amIAuthorized
@@ -26,7 +28,9 @@ const HeatObserver = () => {
     if ( !amIAuthorized() ) {
         return <Redirect to="/login/" />;
     }
-    return (
+    return <>
+        <MenuWithRouter/>
+        <FilePrintingStatusBar/>
         <PageContent>
             <WarningMessage
                 isPrinterConnected={ isPrinterConnected }
@@ -39,7 +43,5 @@ const HeatObserver = () => {
                 data={ records }
             />
         </PageContent>
-    );
+    </>;
 }
-
-export const HeatObserverRoute = withRouter( HeatObserver );

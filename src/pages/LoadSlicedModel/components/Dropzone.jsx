@@ -1,5 +1,5 @@
 import { useDropzone } from "react-dropzone";
-import React, { useCallback, memo } from "react";
+import { useCallback, memo } from "react";
 import { DropBoxContainer } from "./DropBoxContainer";
 
 function NotMemorizedDropzone( { sender, couldIBreakEverything, isPrinterConnected } ) {
@@ -13,7 +13,7 @@ function NotMemorizedDropzone( { sender, couldIBreakEverything, isPrinterConnect
             return;
         }
         const file = acceptedFiles[ 0 ];
-        if ( !(/\.gcode$/ ).test( file.name ) ) {
+        if ( !(/\.(g|gcode)$/ ).test( file.name ) ) { // подстраховочка к input accept
             alert( `Файл недопустим к отправке, потому что имеет расширение отличное от .code
 Имя файла: ${ file.name }
 Тип файла: ${ file.type }` );
@@ -37,7 +37,7 @@ function NotMemorizedDropzone( { sender, couldIBreakEverything, isPrinterConnect
     return (
         <div className="container">
             <DropBoxContainer {...getRootProps( { isDragActive } ) }>
-                <input {...getInputProps() } />
+                <input accept=".g, .gcode" {...getInputProps() } />
                 Перетащите .gcode файл в эту область или <br/>
                 нажмите на неё, чтобы выбрать файл для загрузки
             </DropBoxContainer>

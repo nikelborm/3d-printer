@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import { useCallback, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import { GlobalContext } from "../../components/GlobalContextBasedOnDataFromWS";
 import { Input } from "./components/Input";
@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DivThatCenterInnerElements } from "./components/DivThatCenterInnerElements";
 
-const Login = () => {
+export const Login = () => {
     const {
         authorizationActions: {
             amIAuthorized,

@@ -1,12 +1,14 @@
-import React, { useContext, useCallback } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { useContext, useCallback } from "react";
+import { Redirect } from "react-router-dom";
 import { GlobalContext } from "../../components/GlobalContextBasedOnDataFromWS";
 import { PageContent } from "../../components/PageContent";
 import { WarningMessage } from "./components/WarningMessage";
 import { JoystickImage } from "./components/JoystickImage";
 import { JoystickButtons } from "./components/JoystickButtons";
+import { MenuWithRouter } from "../../components/Menu";
+import { FilePrintingStatusBar } from "../../components/FilePrintingStatusBar";
 
-const AxesControl = () => {
+export const AxesControl = () => {
     const {
         authorizationActions: {
             amIAuthorized
@@ -40,14 +42,16 @@ const AxesControl = () => {
         return <Redirect to="/login/" />;
     }
     const couldIBreakEverything = isPrintingActive && Date.now() < finishTime.getTime();
-    return <PageContent>
-        <WarningMessage
-            couldIBreakEverything={ couldIBreakEverything }
-            isPrinterConnected={ isPrinterConnected }
-        />
-        <JoystickImage/>
-        <JoystickButtons onClick={ handleClick }/>
-    </PageContent>;
+    return <>
+        <MenuWithRouter/>
+        <FilePrintingStatusBar/>
+        <PageContent>
+            <WarningMessage
+                couldIBreakEverything={ couldIBreakEverything }
+                isPrinterConnected={ isPrinterConnected }
+            />
+            <JoystickImage/>
+            <JoystickButtons onClick={ handleClick }/>
+        </PageContent>
+    </>;
 }
-
-export const AxesControlRoute = withRouter( AxesControl );

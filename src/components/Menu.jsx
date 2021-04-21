@@ -1,4 +1,4 @@
-import React, { PureComponent, useContext } from "react";
+import { PureComponent, useContext } from "react";
 import { withRouter } from "react-router";
 import Nav from "react-bootstrap/Nav";
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
@@ -19,14 +19,15 @@ class MenuPoint extends PureComponent {
     }
 }
 
-const Menu = ( { location: { pathname } } ) => {
+const Menu = ( props ) => {
+    console.log('props: ', props);
     const { isPrinterConnected } = useContext( GlobalContext );
     return [
         "/admin/terminal/",
         "/admin/axesControl/",
         "/admin/heatObserver/",
         "/admin/loadSlicedModel/",
-    ].includes( pathname ) && (
+    ].includes( props.location.pathname ) && (
         <Navbar bg="dark" variant="dark" fixed="top">
             <Navbar.Brand href="#home">
                 <img
@@ -38,7 +39,7 @@ const Menu = ( { location: { pathname } } ) => {
                 />{" "}
                 Hello Printy 3D
             </Navbar.Brand>
-            <Nav className="mr-auto" activeKey={ pathname }>
+            <Nav className="mr-auto" activeKey={ props.location.pathname }>
                 <MenuPoint to="/admin/terminal/"        text="Терминал"        />
                 <MenuPoint to="/admin/axesControl/"     text="Оси"             />
                 <MenuPoint to="/admin/heatObserver/"    text="Температура"     />

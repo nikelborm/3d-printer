@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from "react";
+import { useContext, useCallback } from "react";
 // @ts-ignore
 import { GlobalContext } from "../GlobalContextBasedOnDataFromWS";
 import { withRouter } from "react-router";
