@@ -1,11 +1,11 @@
 import { useCallback, useContext } from "react";
-import { withRouter } from "react-router-dom";
 import { GlobalContext } from "../../components/GlobalContextBasedOnDataFromWS";
 import { Input } from "./components/Input";
 import { Redirect } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DivThatCenterInnerElements } from "./components/DivThatCenterInnerElements";
+import "./styles.css";
 
 export const Login = () => {
     const {
@@ -47,5 +47,3 @@ export const Login = () => {
         </DivThatCenterInnerElements>
     );
 }
-
-export const LoginRoute = withRouter( Login );
