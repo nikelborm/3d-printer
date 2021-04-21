@@ -1,11 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
-import "react-sweet-progress/lib/style.css";
 import App from "./App";
 
-ReactDOM.render(
+render(
     <App/>,
     document.getElementById( "root" )
 );

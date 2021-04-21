@@ -1,6 +1,7 @@
 // @ts-ignore
 import { Progress } from "react-sweet-progress";
 import styled from "styled-components";
+import "react-sweet-progress/lib/style.css";
 
 export const StyledProgressBar = styled( Progress )`
     width: 100%;

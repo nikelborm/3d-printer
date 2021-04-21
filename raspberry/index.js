@@ -29,7 +29,7 @@ function downWatcher() {
 }
 function upWatcher() {
     wsConnectionToServer.send( {
-        event: "raspberryup",
+        event: "printerAuth",
         password,
     } );
 }
@@ -142,7 +142,7 @@ readlineParser.addListener( "data", line => {
     wsConnectionToServer.send( {
         event: "sendLine",
         line,
-        time: Date.now()
+        id: "" + Date.now() + process.hrtime()[ 1 ],
     } );
 } );
 

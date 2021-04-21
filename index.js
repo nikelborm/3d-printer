@@ -7,6 +7,9 @@ import sha256 from "sha256";
 import ws from "ws";
 import { shutdown } from "./shutdown.js";
 import { log } from "./log.js";
+import { reportAuthStatus } from "./reportAuthStatus.js";
+import { sendAccessDeniedMessage } from "./sendAccessDeniedMessage.js";
+import compression from "compression";
 // import { validateInput } from "./validateInput";
 
 const __dirname = path.resolve();
@@ -35,6 +38,7 @@ let printingStatusNotificationTimeout;
 const app = express();
 
 app.use( favicon( path.join( __dirname, "build", "favicon.ico" ) ) );
+app.use( compression() );
 
 app.use( "/", staticBuildDir );
 app.use( "/login/", staticBuildDir );
@@ -66,7 +70,7 @@ const sendToPrinters   = body => broadcast( body, client => client.isPrinter );
 function allMessagesHandler( data, connection ) {
     switch ( data.event ) {
         case "sendGCommand": {
-            if( !connection.isUser ) return;
+            if( !connection.isUser ) return sendAccessDeniedMessage( connection, data.event );
             sendToAuthorized( {
                 event: "clientSendedGCommand",
                 command: data.command,
@@ -75,7 +79,7 @@ function allMessagesHandler( data, connection ) {
             break;
         }
         case "sendGCodeFile": {
-            if( !connection.isUser ) return;
+            if( !connection.isUser ) return sendAccessDeniedMessage( connection, data.event );
             sendToUsers( {
                 event: "clientSendedGCodeFile",
                 preview: data.preview,
@@ -90,7 +94,7 @@ function allMessagesHandler( data, connection ) {
                 finishTime: Date.now() + ( data.secondsCost + secsToHeatExtruder ) * 1000,
             };
             sendToUsers( {
-                event: "modelPrintingStatus",
+                event: "modelPrintingStatusWasChanged",
                 ...filePrintingInfo,
             } );
             clearTimeout( printingStatusNotificationTimeout );
@@ -100,10 +104,11 @@ function allMessagesHandler( data, connection ) {
                     isPrintingActive: false,
                 };
                 sendToUsers( {
-                    event: "modelPrintingStatus",
+                    event: "modelPrintingStatusWasChanged",
                     ...filePrintingInfo,
                 } );
             }, filePrintingInfo.secondsCost * 1000 + 300000 );
+            /* + 300 дополнительных секунд, при которых на сайте ещё будет показываться уведомление, даже если печать завершена */
             sendToPrinters( {
                 event: "clientSendedGCodeFile",
                 gCodeFileContent: data.gCodeFileContent,
@@ -112,46 +117,36 @@ function allMessagesHandler( data, connection ) {
             break;
         }
         case "sendLine": {
-            if( !connection.isPrinter ) return;
+            if( !connection.isPrinter ) return sendAccessDeniedMessage( connection, data.event );
             sendToUsers( {
                 event: "printerSendedLine",
                 line: data.line,
+                id: data.id,
                 time: Date.now(),
-                id: "" + Date.now() + process.hrtime()[ 1 ],
             } );
             break;
         }
-        case "raspberryup": {
-            if( sha256( data.password ) === printerPasswordHash ) {
-                connection.isPrinter = true;
-                isPrinterConnected = true;
-                sendToUsers( {
-                    event: "printerState",
-                    isPrinterConnected,
-                    time: Date.now(),
-                } );
-            }
+        case "printerAuth": {
+            const isPasswordCorrect = sha256( data.password ) === printerPasswordHash;
+            reportAuthStatus( connection, isPasswordCorrect, data.password, data.event );
+            if( !isPasswordCorrect ) return;
+            connection.isPrinter = true;
+            isPrinterConnected = true;
+            sendToUsers( {
+                event: "printerState",
+                isPrinterConnected,
+                time: Date.now(),
+            } );
             break;
         }
-        case "userauth": {
+        case "userAuth": {
             const isPasswordCorrect = sha256( data.password ) === userPasswordHash;
-            connection.send(
-                JSON.stringify( {
-                    event: "loginReply",
-                    report: {
-                        isError: !isPasswordCorrect,
-                        info: isPasswordCorrect ? "" : "Неверный пароль",
-                    },
-                    reply: {
-                        password: data.password,
-                    },
-                } )
-            );
+            reportAuthStatus( connection, isPasswordCorrect, data.password, data.event );
             if( !isPasswordCorrect ) return;
             connection.isUser = true;
             connection.send(
                 JSON.stringify( {
-                    event: "modelPrintingStatus",
+                    event: "modelPrintingStatusWasChanged",
                     ...filePrintingInfo,
                 } )
             );
