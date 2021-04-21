@@ -1,4 +1,5 @@
 import { Switch, Route, Redirect } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Terminal } from "../Terminal";
 import { AxesControl } from "../AxesControl";
 import { HeatObserver } from "../HeatObserver";

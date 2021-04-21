@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
 
-import { LoginRoute }       from "./pages/Login";
+import { Login }            from "./pages/Login";
 import GlobalWSContext      from "./components/GlobalContextBasedOnDataFromWS";
 import { createPrefetcher } from "./components/Prefetcher";
 import { PageContent }      from "./components/PageContent";
@@ -36,8 +36,7 @@ const App = props => (
         <GlobalWSContext>
             <BrowserRouter>
                 <Switch>
-                    <LoginRoute path="/login/" exact/>
-
+                    <Route path="/login/" component={ Login }/>
                     <Route path="/admin/" component={ AdminRouteContent }/>
 
                     <Route path="*">
