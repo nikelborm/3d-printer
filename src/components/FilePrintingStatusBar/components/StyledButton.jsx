@@ -1,6 +1,7 @@
+// @ts-nocheck
 import styled from "styled-components";
 
-export const CloseButton = styled.button`
+export const StyledButton = styled.button`
     display: ${ props => props.isPrintingFinished ? "block" : "none" };
     border: none;
     background: inherit;

@@ -1,10 +1,9 @@
-import { PureComponent, useContext } from "react";
+import { PureComponent } from "react";
 import { withRouter } from "react-router";
 import Nav from "react-bootstrap/Nav";
 import LinkContainer from "react-router-bootstrap/lib/LinkContainer";
 import Navbar from "react-bootstrap/Navbar";
-import { GlobalContext } from "./GlobalContextBasedOnDataFromWS";
-import { PrinterStatus } from "./PrinterStatus";
+import { PrinterStatusBage } from "./components/PrinterStatusBage";
 
 class MenuPoint extends PureComponent {
     render() {
@@ -21,13 +20,7 @@ class MenuPoint extends PureComponent {
 
 const Menu = ( props ) => {
     console.log('props: ', props);
-    const { isPrinterConnected } = useContext( GlobalContext );
-    return [
-        "/admin/terminal/",
-        "/admin/axesControl/",
-        "/admin/heatObserver/",
-        "/admin/loadSlicedModel/",
-    ].includes( props.location.pathname ) && (
+    return (
         <Navbar bg="dark" variant="dark" fixed="top">
             <Navbar.Brand href="#home">
                 <img
@@ -47,7 +40,7 @@ const Menu = ( props ) => {
             </Nav>
             <Navbar.Collapse className="justify-content-end">
                 <Navbar.Text>
-                    <PrinterStatus isPrinterConnected={ isPrinterConnected }/>
+                    <PrinterStatusBage/>
                 </Navbar.Text>
             </Navbar.Collapse>
         </Navbar>

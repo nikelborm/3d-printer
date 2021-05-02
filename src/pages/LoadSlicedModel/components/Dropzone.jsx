@@ -2,9 +2,9 @@ import { useDropzone } from "react-dropzone";
 import { useCallback, memo } from "react";
 import { DropBoxContainer } from "./DropBoxContainer";
 
-function NotMemorizedDropzone( { sender, couldIBreakEverything, isPrinterConnected } ) {
+function NotMemorizedDropzone( { sender, canOurCommandsBeDangerous, isPrinterConnected } ) {
     const onDrop = useCallback( acceptedFiles => {
-        if ( couldIBreakEverything ) {
+        if ( canOurCommandsBeDangerous ) {
             alert( "Дождитесь завершения печати!" );
             return;
         }
@@ -26,7 +26,7 @@ function NotMemorizedDropzone( { sender, couldIBreakEverything, isPrinterConnect
             sender( reader.result, file.name );
         };
         reader.readAsText( file );
-    }, [ sender, couldIBreakEverything, isPrinterConnected ] );
+    }, [ sender, canOurCommandsBeDangerous, isPrinterConnected ] );
 
     const {
         getRootProps,

@@ -1,9 +1,9 @@
 import { memo } from "react";
 import Alert from "react-bootstrap/Alert";
 
-const NotMemorizedWarningMessage = ( { couldIBreakEverything, isPrinterConnected } ) => (
+const NotMemorizedWarningMessage = ( { canOurCommandsBeDangerous, isPrinterConnected } ) => (
     isPrinterConnected
-        ? couldIBreakEverything && (
+        ? canOurCommandsBeDangerous && (
             <Alert variant="danger">
                 Будьте осторожны: при измении положения печатающей головки и стола <br/>
                 Во время печати, будет непоправимо испорчена отправленная на печать модель

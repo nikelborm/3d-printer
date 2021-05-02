@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
     "mobx": "^6.2.0",
+    "mobx-react": "^7.1.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
     "react-chartjs-2": "^2.11.1",
@@ -70,6 +71,16 @@
     "styled-components": "^5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.13.15",
     "babel-plugin-styled-components": "^1.12.0"
+  },
+  "babel": {
+    "plugins": [
+      "babel-plugin-styled-components",
+      [ "@babel/plugin-proposal-decorators", { "legacy": true } ]
+    ],
+    "presets": [
+      "react-app"
+    ]
   }
 }
