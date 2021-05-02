@@ -1,9 +1,9 @@
 import { memo } from "react";
 import Alert from "react-bootstrap/Alert";
 
-const NotMemorizedWarningMessage = ( { couldIBreakEverything, isPrinterConnected } ) => (
+const NotMemorizedWarningMessage = ( { canOurCommandsBeDangerous, isPrinterConnected } ) => (
     isPrinterConnected
-        ? couldIBreakEverything && (
+        ? canOurCommandsBeDangerous && (
             <Alert variant="danger">
                 Отправка новых моделей заблокирована до завершения печати текущей. <br/>
                 Дождитесь завершения текущей, извлеките её из принтера, <br/>

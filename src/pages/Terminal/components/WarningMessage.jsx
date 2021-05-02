@@ -1,9 +1,9 @@
 import { memo } from "react";
 import Alert from "react-bootstrap/Alert";
 
-const NotMemorizedWarningMessage = ( { couldIBreakEverything, isPrinterConnected } ) => (
+const NotMemorizedWarningMessage = ( { canOurCommandsBeDangerous, isPrinterConnected } ) => (
     isPrinterConnected
-        ? couldIBreakEverything && (
+        ? canOurCommandsBeDangerous && (
             <Alert variant="danger">
                 Большинство команд, которые вы отправите будут
                 выполнены только после завершения печати

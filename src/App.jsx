@@ -2,24 +2,23 @@ import { StrictMode } from "react";
 import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
 
 import { Login }            from "./pages/Login";
-import GlobalWSContext      from "./components/GlobalContextBasedOnDataFromWS";
 import { createPrefetcher } from "./components/Prefetcher";
-import { PageContent }      from "./components/PageContent";
+import { PageContentWrapper }      from "./components/PageContentWrapper";
 import Alert                from "react-bootstrap/Alert";
 
 const Fallback = () => (
-    <PageContent>
+    <PageContentWrapper>
         <h1>Загрузка страницы</h1>
-    </PageContent>
+    </PageContentWrapper>
 );
 
 const ErrorPresenter = ( { error } ) => (
-    <PageContent>
+    <PageContentWrapper>
         <Alert variant="danger">
             <Alert.Heading> Произошла ошибка при загрузке страницы: { error.name } </Alert.Heading>
             { error.message && <p> { error.message } </p> }
         </Alert>
-    </PageContent>
+    </PageContentWrapper>
 );
 
 const pagePrefetcher = ( page ) => createPrefetcher( {
@@ -33,18 +32,16 @@ const AdminRouteContent = pagePrefetcher( "Admin" );
 
 const App = props => (
     <StrictMode>
-        <GlobalWSContext>
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/login/" component={ Login }/>
-                    <Route path="/admin/" component={ AdminRouteContent }/>
+        <BrowserRouter>
+            <Switch>
+                <Route path="/login/" component={ Login }/>
+                <Route path="/admin/" component={ AdminRouteContent }/>
 
-                    <Route path="*">
-                        <Redirect to="/login/"/>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
-        </GlobalWSContext>
+                <Route path="*">
+                    <Redirect to="/login/"/>
+                </Route>
+            </Switch>
+        </BrowserRouter>
     </StrictMode>
 );
 

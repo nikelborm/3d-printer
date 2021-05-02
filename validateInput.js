@@ -1,8 +1,8 @@
 import { log } from "./log.js";
 
-function isCorrect( field ) {
-    return typeof field === "string" && !!field.length;
-}
+// function isCorrect( field ) {
+//     return typeof field === "string" && !!field.length;
+// }
 
 export function validateInput( input ) {
     let isOK = false;

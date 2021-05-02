@@ -1,5 +1,6 @@
-import { memo } from "react";
+import { observer } from "mobx-react-lite";
 import Badge from "react-bootstrap/Badge";
+import { PrinterStatusStore } from "../../../store/PrinterStatus";
 
 const getVariant = (
     connectionStatus,
@@ -14,14 +15,14 @@ const getVariant = (
             : ifUnknown
 );
 
-const NotMemorizedPrinterStatus = ( { isPrinterConnected } ) => (
+export const PrinterStatusBage = observer( () => (
     <>
         Принтер:{" "}
         <Badge
             pill
             variant={
                 getVariant(
-                    isPrinterConnected,
+                    PrinterStatusStore.isPrinterConnected,
                     "success",
                     "danger",
                     "secondary"
@@ -29,7 +30,7 @@ const NotMemorizedPrinterStatus = ( { isPrinterConnected } ) => (
             }
             children={
                 getVariant(
-                    isPrinterConnected,
+                    PrinterStatusStore.isPrinterConnected,
                     "Подключён",
                     "Отключён",
                     "Запрашивается..."
@@ -37,6 +38,4 @@ const NotMemorizedPrinterStatus = ( { isPrinterConnected } ) => (
             }
         />
     </>
-);
-
-export const PrinterStatus = memo( NotMemorizedPrinterStatus );
+) );

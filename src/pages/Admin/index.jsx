@@ -1,19 +1,33 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Terminal } from "../Terminal";
-import { AxesControl } from "../AxesControl";
-import { HeatObserver } from "../HeatObserver";
-import { LoadSlicedModel } from "../LoadSlicedModel";
+import { ContentOfTerminalPage } from "../Terminal";
+import { ContentOfAxesControlPage } from "../AxesControl";
+import { ContentOfHeatObserverPage } from "../HeatObserver";
+import { ContentOfLoadSlicedModelPage } from "../LoadSlicedModel";
+import { MenuWithRouter } from "../../components/Menu";
+import { FilePrintingStatusBar } from "../../components/FilePrintingStatusBar";
+import { PageContentWrapper } from "../../components/PageContentWrapper";
+import { AuthInfoStore } from "../../store/AuthManager";
+import { observer } from "mobx-react-lite";
 
-export const Admin = ( ...props ) => {console.log("Admin", ...props);return(
-    <Switch>
-        <Route path="/admin/terminal/"        exact component={ Terminal }/>
-        <Route path="/admin/axesControl/"     exact component={ AxesControl }/>
-        <Route path="/admin/heatObserver/"    exact component={ HeatObserver }/>
-        <Route path="/admin/loadSlicedModel/" exact component={ LoadSlicedModel }/>
+export const Admin = observer( () => ( AuthInfoStore.amIAuthorized
+    ? (
+        <>
+            <MenuWithRouter/>
+            <FilePrintingStatusBar/>
+            <PageContentWrapper>
+                <Switch>
+                    <Route path="/admin/terminal/"        exact component={ ContentOfTerminalPage }/>
+                    <Route path="/admin/axesControl/"     exact component={ ContentOfAxesControlPage }/>
+                    <Route path="/admin/heatObserver/"    exact component={ ContentOfHeatObserverPage }/>
+                    <Route path="/admin/loadSlicedModel/" exact component={ ContentOfLoadSlicedModelPage }/>
 
-        <Route path="*">
-            <Redirect to="/admin/terminal/"/>
-        </Route>
-    </Switch>
-)};
+                    <Route path="*">
+                        <Redirect to="/admin/terminal/"/>
+                    </Route>
+                </Switch>
+            </PageContentWrapper>
+        </>
+    )
+    : <Redirect to="/login/" />
+) );

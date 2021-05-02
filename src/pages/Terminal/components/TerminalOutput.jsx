@@ -6,7 +6,6 @@ export const NotMemorizedTerminalOutput = ( { terminalLogs } ) => (
     <AreaForPrintingLines>
         { terminalLogs.map( log => (
             <Line
-                // key={ log.time.getTime() }
                 { ...log }
             />
         ) ) }

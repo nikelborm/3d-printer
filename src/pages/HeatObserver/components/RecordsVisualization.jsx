@@ -1,5 +1,6 @@
-import { memo } from "react";
+import { observer } from "mobx-react-lite";
 import { Line } from "react-chartjs-2";
+import { AllSensorsRecordsStore } from "../../../store/AllSensorsRecords";
 import { ChartContainer } from "./ChartContainer";
 
 const chartOptions = {
@@ -56,37 +57,19 @@ const chartOptions = {
     },
 };
 
-const NotMemorizedRecordsVisualization = ( { data } ) => (
+export const RecordsVisualization = observer( () => (
     <ChartContainer>
         <Line
             data={ {
-                datasets: [
-                    {
-                        label: "Текущая температура экструдера °C",
-                        borderColor: "rgba(225, 75, 75, 1)",
-                        data: data.realTemperatureOfExtruder,
+                datasets: AllSensorsRecordsStore.recordSets.map(
+                    ( { label, color, records } ) => ( {
+                        label,
+                        borderColor: color,
+                        data: records,
                         fill: false,
                         pointBorderWidth: 0,
-                    }, {
-                        label: "Ожидаемая температура экструдера °C",
-                        borderColor: "rgba(120, 81, 169, 1)",
-                        data: data.expectedTemperatureOfExtruder,
-                        fill: false,
-                        pointBorderWidth: 0,
-                    }, {
-                        label: "Текущая температура стола °C",
-                        borderColor: "rgba(40, 114, 51, 1)",
-                        data: data.realTemperatureOfTable,
-                        fill: false,
-                        pointBorderWidth: 0,
-                    }, {
-                        label: "Ожидаемая температура стола °C",
-                        borderColor: "rgba(0, 0, 0, 1)",
-                        data: data.expectedTemperatureOfTable,
-                        fill: false,
-                        pointBorderWidth: 0,
-                    },
-                ],
+                    } )
+                )
             } }
             // @ts-ignore
             options={
@@ -94,6 +77,4 @@ const NotMemorizedRecordsVisualization = ( { data } ) => (
             }
         />
     </ChartContainer>
-);
-
-export const RecordsVisualization = memo( NotMemorizedRecordsVisualization );
+) );

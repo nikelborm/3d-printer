@@ -55,5 +55,4 @@ function NotMemorizedLine( { time, name, prefixcontent, linecontent } ) {
     </div>;
 }
 
-// export const Line = memo( NotMemorizedLine );
 export const Line = memo( NotMemorizedLine );

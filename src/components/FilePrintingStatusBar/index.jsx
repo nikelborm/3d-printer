@@ -1,56 +1,20 @@
-import { useContext, useCallback } from "react";
-// @ts-ignore
-import { GlobalContext } from "../GlobalContextBasedOnDataFromWS";
-import { withRouter } from "react-router";
 import Navbar from "react-bootstrap/Navbar";
-import { FilePrintingProgressBar } from "./FilePrintingProgressBar";
-import { CloseButton } from "./CloseButton";
-import { TimeInfo } from "./TimeInfo";
-import { CubeImage } from "./CubeImage";
-import { FileName } from "./FileName";
+import { FilePrintingProgressBar } from "./components/FilePrintingProgressBar";
+import { CloseButton } from "./components/CloseButton";
+import { TimeInfo } from "./components/TimeInfo";
+import { CubeImage } from "./components/CubeImage";
+import { FileName } from "./components/FileName";
+import { observer } from "mobx-react-lite";
+import { PrinterStatusStore } from "../../store/PrinterStatus";
 
-const BottomStatusBar = () => {
-    const {
-        filePrintingInfo: {
-            isPrintingActive,
-            secondsCost,
-            startTime,
-            finishTime,
-            gCodeFileName,
-        },
-        userActions: {
-            closeProgressBar
-        }
-    } = useContext( GlobalContext );
-
-    const handleClick = useCallback(
-        () => closeProgressBar(),
-        [ closeProgressBar ]
-    );
-
-    const isPrintingFinished = isPrintingActive && Date.now() >= finishTime.getTime();
-    return isPrintingActive && (
+export const FilePrintingStatusBar = observer( () => (
+    PrinterStatusStore.isPrintingActive && (
         <Navbar bg="dark" variant="dark" fixed="bottom">
             <CubeImage/>
-            <FileName name={ gCodeFileName }/>
-            <FilePrintingProgressBar
-                isPrintingFinished={ isPrintingFinished }
-                startTime={ startTime }
-                finishTime={ finishTime }
-                secondsCost={ secondsCost }
-            />
-            <TimeInfo
-                startTime={ startTime }
-                finishTime={ finishTime }
-            />
-            <CloseButton
-                onClick={ handleClick }
-                // @ts-ignore
-                isPrintingFinished={ isPrintingFinished }
-                children="×"
-            />
+            <FileName/>
+            <FilePrintingProgressBar/>
+            <TimeInfo/>
+            <CloseButton/>
         </Navbar>
-    );
-}
-
-export const FilePrintingStatusBar = withRouter( BottomStatusBar );
+    )
+) );
