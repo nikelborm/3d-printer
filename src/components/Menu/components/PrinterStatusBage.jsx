@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 import Badge from "react-bootstrap/Badge";
 import { PrinterStatusStore } from "../../../store/PrinterStatus";
 

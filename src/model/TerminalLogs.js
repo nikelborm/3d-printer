@@ -1,8 +1,11 @@
-import { action, observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 
 export class TerminalLogs {
+    constructor() {
+        makeObservable( this );
+    }
     // каждый отдельный терминал лог не планируется изменяться в будущем
-    terminalLogs = observable.array( [], { deep: false } );
+    @observable terminalLogs = [];
     maxTerminalLinesCount = 200;
     @action addLineIntoTerminalLogs = lineInfo => {
         this.terminalLogs.unshift( lineInfo );

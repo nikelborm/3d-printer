@@ -1,4 +1,5 @@
-import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
+import { observer } from "mobx-react";
 import { Line } from "react-chartjs-2";
 import { AllSensorsRecordsStore } from "../../../store/AllSensorsRecords";
 import { ChartContainer } from "./ChartContainer";
@@ -62,10 +63,10 @@ export const RecordsVisualization = observer( () => (
         <Line
             data={ {
                 datasets: AllSensorsRecordsStore.recordSets.map(
-                    ( { label, color, records } ) => ( {
-                        label,
-                        borderColor: color,
-                        data: records,
+                    ( recordSet ) => ( {
+                        label: recordSet.label,
+                        borderColor: recordSet.color,
+                        data: toJS( recordSet.records ),
                         fill: false,
                         pointBorderWidth: 0,
                     } )

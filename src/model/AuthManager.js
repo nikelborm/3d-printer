@@ -1,6 +1,9 @@
-import { action, observable, computed } from "mobx";
+import { action, observable, computed, makeObservable } from "mobx";
 
 export class AuthManager {
+    constructor(){
+        makeObservable( this );
+    }
     @observable isAuthInProcess = false;
     @observable storedPassword = sessionStorage.getItem( "savedPassword" ) ?? "";
 

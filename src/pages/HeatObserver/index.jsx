@@ -3,7 +3,7 @@ import { GettingTemperatureDataControlButtons } from "./components/GettingTemper
 import { WarningMessage } from "./components/WarningMessage";
 import { sendGCommand } from "../../AppWSChannel";
 import { PrinterStatusStore } from "../../store/PrinterStatus";
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 
 const handleClick = event => {
     event.preventDefault();

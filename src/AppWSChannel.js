@@ -1,10 +1,21 @@
 import { SelfHealingWebSocket } from "./SelfHealingWebSocket";
+import { connectWSHandlersFromAllSensorsRecordsStore } from "./WSHandlers/AllSensorsRecords";
+import { connectWSHandlersFromAuthInfoStore } from "./WSHandlers/AuthManager";
+import { connectWSHandlersFromPrinterStatusStore } from "./WSHandlers/PrinterStatus";
+import { connectWSHandlersFromTerminalLogsStore } from "./WSHandlers/TerminalLogs";
 
 const RegExpForSearchLinesWithTime = /time:\s?(([+-]{0,1}[0-9]{1,}[.][0-9]{1,})|([+-]{0,1}[0-9]{1,}))/i;
 
 const { port, hostname, } = document.location;
 const protocol = document.location.protocol === "https:" ? "wss://" : "ws://";
-const WSAdress = protocol + hostname + ( port === "3001" ? ":3000" : "3001" );
+const WSAdress = protocol + hostname + (
+[ "3000", "3001", "3002" ].includes( port )
+    ? ":3000"
+    : ( port === ""
+        ? ""
+        : ":" + port
+    )
+);
 
 export const AppWSChannel = new SelfHealingWebSocket( WSAdress );
 
@@ -12,6 +23,11 @@ AppWSChannel.addMessageListener( data => {
     if ( data.event !== "error" ) return;
     alert( "Ошибка, сообщите программисту этот текст: " + data.message );
 } );
+
+connectWSHandlersFromAllSensorsRecordsStore( AppWSChannel );
+connectWSHandlersFromAuthInfoStore( AppWSChannel );
+connectWSHandlersFromPrinterStatusStore( AppWSChannel );
+connectWSHandlersFromTerminalLogsStore( AppWSChannel );
 
 export const sendGCommand = ( command, isCapitalize ) => {
     AppWSChannel.send( {

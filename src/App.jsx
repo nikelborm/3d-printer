@@ -1,10 +1,22 @@
-import { StrictMode } from "react";
+import { Component } from "react";
 import { Route, Switch, Redirect, BrowserRouter } from "react-router-dom";
+import { configure }          from "mobx"
+import Alert                  from "react-bootstrap/Alert";
+import { enableLogging }      from "mobx-logger";
+import { AppWSChannel }       from "./AppWSChannel";
+import { Login }              from "./pages/Login";
+import { createPrefetcher }   from "./components/Prefetcher";
+import { PageContentWrapper } from "./components/PageContentWrapper";
 
-import { Login }            from "./pages/Login";
-import { createPrefetcher } from "./components/Prefetcher";
-import { PageContentWrapper }      from "./components/PageContentWrapper";
-import Alert                from "react-bootstrap/Alert";
+enableLogging();
+
+configure( {
+    enforceActions: "always",
+    computedRequiresReaction: true,
+    reactionRequiresObservable: true,
+    observableRequiresReaction: true,
+    disableErrorBoundaries: true
+} );
 
 const Fallback = () => (
     <PageContentWrapper>
@@ -30,19 +42,24 @@ const pagePrefetcher = ( page ) => createPrefetcher( {
 
 const AdminRouteContent = pagePrefetcher( "Admin" );
 
-const App = props => (
-    <StrictMode>
-        <BrowserRouter>
-            <Switch>
-                <Route path="/login/" component={ Login }/>
-                <Route path="/admin/" component={ AdminRouteContent }/>
-
-                <Route path="*">
-                    <Redirect to="/login/"/>
-                </Route>
-            </Switch>
-        </BrowserRouter>
-    </StrictMode>
-);
-
+class App extends Component {
+    componentDidMount() {
+        AppWSChannel.start();
+    }
+    render() {
+        return (
+            // <StrictMode>
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/login/" component={ Login }/>
+                        <Route path="/admin/" component={ AdminRouteContent }/>
+                        <Route path="*">
+                            <Redirect to="/login/"/>
+                        </Route>
+                    </Switch>
+                </BrowserRouter>
+            // </StrictMode>
+        );
+    }
+}
 export default App;

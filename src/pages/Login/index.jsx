@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import { DivThatCenterInnerElements } from "./components/DivThatCenterInnerElements";
 import "./styles.css";
 import { AuthInfoStore, login } from "../../store/AuthManager";
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 
 const handleSend = event => {
     event.preventDefault();
