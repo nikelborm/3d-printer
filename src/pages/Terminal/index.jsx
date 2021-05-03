@@ -4,8 +4,6 @@ import { WarningMessage } from "./components/WarningMessage";
 import { AlternateCommandsAndIssuesWarning } from "./components/AlternateCommandsAndIssuesWarning";
 import { TerminalLogsStore } from "../../store/TerminalLogs";
 import { sendGCommand } from "../../AppWSChannel";
-import { PrinterStatusStore } from "../../store/PrinterStatus";
-import { observer } from "mobx-react-lite";
 
 const commands = {
     clear: TerminalLogsStore.clearTerminalLogs,
@@ -26,14 +24,11 @@ const handleSend = event => {
     commandInput.value = "";
 };
 
-export const ContentOfTerminalPage = observer( () => (
+export const ContentOfTerminalPage = () => (
     <>
-        <WarningMessage
-            canOurCommandsBeDangerous={ PrinterStatusStore.canOurCommandsBeDangerous }
-            isPrinterConnected={ PrinterStatusStore.isPrinterConnected }
-        />
+        <WarningMessage/>
         <AlternateCommandsAndIssuesWarning/>
         <CommandEnteringForm handleSend={ handleSend }/>
-        <TerminalOutput terminalLogs={ TerminalLogsStore.terminalLogs }/>
+        <TerminalOutput/>
     </>
-) );
+);

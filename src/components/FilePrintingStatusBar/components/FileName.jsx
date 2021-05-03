@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 import Navbar from "react-bootstrap/Navbar";
 import { PrinterStatusStore } from "../../../store/PrinterStatus";
 

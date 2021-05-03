@@ -1,6 +1,9 @@
-import { action, observable, computed } from "mobx";
+import { action, observable, computed, makeObservable } from "mobx";
 
 export class PrinterStatus {
+    constructor() {
+        makeObservable( this );
+    }
     intervalForUpdatingInternalTicker = null;
     timeoutThatStopsUpdatingInternalTicker = null;
     @observable isPrinterConnected = null;

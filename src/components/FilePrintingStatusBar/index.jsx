@@ -4,7 +4,7 @@ import { CloseButton } from "./components/CloseButton";
 import { TimeInfo } from "./components/TimeInfo";
 import { CubeImage } from "./components/CubeImage";
 import { FileName } from "./components/FileName";
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 import { PrinterStatusStore } from "../../store/PrinterStatus";
 
 export const FilePrintingStatusBar = observer( () => (

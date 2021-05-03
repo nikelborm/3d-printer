@@ -40,8 +40,9 @@ export class SelfHealingWebSocket {
         [ "close", this.#closingHandler, this.#closingHandler ],
     ];
     #connectEventHandlers = () => {
-        for ( const [ eventName, handlerFunction ] of this.#eventListenersStore ) {
-            this.connection?.addEventListener( eventName, handlerFunction );
+        console.log("#eventListenersStore: ", this.#eventListenersStore);
+        for ( const [ eventName, rawHandler, wrappedHandler ] of this.#eventListenersStore ) {
+            this.connection?.addEventListener( eventName, wrappedHandler || rawHandler );
         }
     };
     #respawnWebSocket = () => {
@@ -88,7 +89,7 @@ export class SelfHealingWebSocket {
         if( this.isAvailable() ) {
             this.connection?.send( data );
         } else {
-            console.log( "Соединение с сервером не установлено." );
+            console.log( "[error] Соединение с сервером не установлено." );
         }
     };
     send = data => this.sendRaw( JSON.stringify( data ) );

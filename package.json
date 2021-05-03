@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
     "mobx": "^6.2.0",
+    "mobx-logger": "^0.7.1",
     "mobx-react": "^7.1.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.5.2",
@@ -36,9 +37,9 @@
   },
   "scripts": {
     "start": "node --trace-deprecation --trace-warnings index.js",
-    "startdev": "react-scripts start",
-    "build": "react-scripts build",
-    "buildp": "react-scripts build --profile",
+    "startdev": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "buildp": "react-app-rewired build --profile",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -72,15 +73,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.13.15",
-    "babel-plugin-styled-components": "^1.12.0"
-  },
-  "babel": {
-    "plugins": [
-      "babel-plugin-styled-components",
-      [ "@babel/plugin-proposal-decorators", { "legacy": true } ]
-    ],
-    "presets": [
-      "react-app"
-    ]
+    "babel-plugin-styled-components": "^1.12.0",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.1.8"
   }
 }

@@ -3,15 +3,12 @@ import { WarningMessage } from "./components/WarningMessage";
 import { JoystickImage } from "./components/JoystickImage";
 import { JoystickButtons } from "./components/JoystickButtons";
 import { sendGCommand } from "../../AppWSChannel";
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react";
 import { PrinterStatusStore } from "../../store/PrinterStatus";
 
 export const ContentOfAxesControlPage = observer( () => {
-    const {
-        isPrinterConnected,
-        canOurCommandsBeDangerous
-    } = PrinterStatusStore;
-
+    const isPrinterConnected = PrinterStatusStore.isPrinterConnected;
+    const canOurCommandsBeDangerous = PrinterStatusStore.canOurCommandsBeDangerous;
     const handleClick = useCallback(
         event => {
             event.preventDefault();

@@ -1,15 +1,15 @@
-import { memo } from "react";
 import { Line } from "./Line";
 import { AreaForPrintingLines } from "./AreaForPrintingLines";
+import { observer } from "mobx-react";
+import { TerminalLogsStore } from "../../../store/TerminalLogs";
 
-export const NotMemorizedTerminalOutput = ( { terminalLogs } ) => (
+
+export const TerminalOutput = observer( () => (
     <AreaForPrintingLines>
-        { terminalLogs.map( log => (
+        { TerminalLogsStore.terminalLogs.map( log => (
             <Line
                 { ...log }
             />
         ) ) }
     </AreaForPrintingLines>
-);
-
-export const TerminalOutput = memo( NotMemorizedTerminalOutput );
+) );
