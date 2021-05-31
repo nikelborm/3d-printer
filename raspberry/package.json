@@ -6,7 +6,7 @@
   "dependencies": {
     "minimist": "^1.2.5",
     "serialport": "^9.0.7",
-    "ws": "^7.4.4"
+    "ws": "^7.4.6"
   },
   "scripts": {
     "start": "node --trace-deprecation --trace-warnings index.js",
