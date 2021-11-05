@@ -34,7 +34,7 @@
     "react-sweet-progress": "^1.1.2",
     "sha256": "^0.2.0",
     "styled-components": "^5.2.1",
-    "ws": "^7.4.4"
+    "ws": "^7.4.6"
   },
   "scripts": {
     "start": "node --trace-deprecation --trace-warnings index.js",
