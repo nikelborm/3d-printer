@@ -18,7 +18,7 @@
     "chart.js": "^2.9.4",
     "compression": "^1.7.4",
     "dayjs": "^1.10.4",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "express-favicon": "^2.0.1",
     "mobx": "^6.2.0",
     "mobx-logger": "^0.7.1",
